@@ -312,25 +312,42 @@ var countValuesInObj = function(obj, value) {
 // them to a provided new name while preserving the value stored at that key.
 var replaceKeysInObj = function(obj, oldKey, newKey) {
 
-  // this is ugly and needs to be refactored but I need to move on
+  // this looks simpler, but it resets every key
   for (var key in obj) {
 
-    if (typeof obj[key] !== 'object' && key === oldKey) {
-      obj[newKey] = obj[key];
-      delete obj[key];
-    }
-    if (typeof obj[key] === 'object') {
-      var newVal = replaceKeysInObj(obj[key], oldKey, newKey);
-      if (key === oldKey) {
-        obj[newKey] = newVal;
-        delete obj[key];
-      } else {
-        obj[key] = newVal;
-      }
-    }
-  }
+    var val = obj[key];
 
+    if (typeof val === 'object') {
+      val = replaceKeysInObj(obj[key], oldKey, newKey);
+    }
+
+    if (key === oldKey) {
+      obj[newKey] = val;
+      delete obj[key];
+    } else {
+      obj[key] = val;
+    }
+
+  }
   return obj;
+
+  // // this is ugly and needs to be refactored but I need to move on
+  // for (var key in obj) {
+  //   if (typeof obj[key] !== 'object' && key === oldKey) {
+  //     obj[newKey] = obj[key];
+  //     delete obj[key];
+  //   }
+  //   if (typeof obj[key] === 'object') {
+  //     var newVal = replaceKeysInObj(obj[key], oldKey, newKey);
+  //     if (key === oldKey) {
+  //       obj[newKey] = newVal;
+  //       delete obj[key];
+  //     } else {
+  //       obj[key] = newVal;
+  //     }
+  //   }
+  // }
+  // return obj;
 
 };
 
